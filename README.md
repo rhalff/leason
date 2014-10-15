@@ -7,9 +7,15 @@ A JSON schema learner.
 
 The concept of Leason is simple: learn the schema by feeding json documents.
 
+Install:
+
+```bash
+npm i leason -g
+```
+
 Usage:
 
-CLI: `bin/leason my.json`
+CLI: `leason my.json`
 
 Script:
 ```javascript
