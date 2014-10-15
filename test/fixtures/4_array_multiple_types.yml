@@ -1,0 +1,25 @@
+#
+# There a different types of items so output will be:
+#
+#  items: [{ type: 'number', type: 'string' }]
+#
+# If anyOf is used, that format will be used instead.
+# If we detect the format is always the same allOf could be used.
+#
+---
+data:
+  four:
+    - 0
+    - "string"
+
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    four:
+      type: "array"
+      items:
+        -
+          type: "number"
+        -
+          type: "string"

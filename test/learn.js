@@ -17,7 +17,7 @@ test('Leason test', function (t) {
         leason = new Leason();
 
         fixture = yaml.safeLoad(
-          fs.readFileSync(files[0], 'utf8')
+          fs.readFileSync(files[i], 'utf8')
         );
 
         leason.parse(fixture.data);

@@ -1,0 +1,17 @@
+#
+# There is only one type here so the format will be:
+#
+#  items: { type: "number" }
+#
+---
+data:
+  four:
+    - 0
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    four:
+      type: "array"
+      items:
+        type: "number"

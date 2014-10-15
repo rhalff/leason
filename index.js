@@ -1,5 +1,11 @@
 var typeOf = require('type-of');
 
+/**
+ *
+ * Leason
+ *
+ * @param {Object} options
+ */
 function Leason(options) {
   if(!(this instanceof Leason)) {
     return new Leason();
@@ -21,11 +27,26 @@ function Leason(options) {
   this.setSchemaVersion('draft-04');
 }
 
+/**
+ *
+ * Set schema version
+ *
+ * Currently only supports v4
+ *
+ * @param {String} version Schema version string
+ */
 Leason.prototype.setSchemaVersion = function(version) {
   this.schema['$schema'] = 'http://json-schema.org/' + version + '/schema#';
 };
 
-// "test", schema
+/**
+ *
+ * Iterates the properties of an object and
+ * definies them as types.
+ *
+ * @param {Object} obj current object location
+ * @param {Object} properties a properties section within a schema
+ */
 Leason.prototype.scanObject = function(obj, properties) {
   var key;
   for(key in obj) {
@@ -36,13 +57,70 @@ Leason.prototype.scanObject = function(obj, properties) {
   }
 };
 
-Leason.prototype.scanArray = function(obj, items) {
+/**
+ *
+ * Reduces the set of items into unique definitions.
+ *
+ * @param {Object} obj current object location
+ * @param {Object} schema the current schema section
+ */
+Leason.prototype.scanArray = function(obj, schema) {
   var i;
-  for(i = 0; i < items.length; i++) {
-    this.parse(items[i], items);
+  for(i = 0; i < obj.length; i++) {
+    // Initial format will be [{},{}]
+    // use postProcess to determine the best format.
+    // which can be anyOf or just an [] with valid types.
+    schema.items[i] = {};
+    // should be able to detect duplicates.
+    // or just also do that in the postprocess.
+    // first just colllect everything, then merge them back.
+    this.parse(obj[i], schema.items[i]);
   }
+
+  // here we determine the correct format
+  // which for now is just only removing duplicates.
+  this.postProcessArray(schema);
 };
 
+/**
+ *
+ * Reduces the set of items into unique definitions.
+ *
+ * @param {Array} items
+ */
+Leason.prototype.postProcessArray = function(schema) {
+
+  var known = [];
+  var remove = [];
+  for(i = 0; i < schema.items.length; i++) {
+    // Stringify trick, will fail if key order is different.
+    var res = JSON.stringify(schema.items[i]);
+    if(known.indexOf(res) === -1) {
+      known.push(res);
+    } else {
+      remove.push(res);
+    }
+  }
+
+  for(i = 0; i < remove.length; i++) {
+    schema.items.splice(remove[i], 1);
+  }
+
+  // if there is only one type, specify with object
+  if(schema.items.length === 1) {
+    schema.items = schema.items[0];
+  }
+
+};
+
+/**
+ *
+ * Parse
+ *
+ * @param {Object} obj the current (part of the) object to examine
+ * @param {Object} schema Current schema part
+ * @param {String} key Optional key used during iteration
+ */
 Leason.prototype.parse = function(obj, schema, key) {
 
   schema = schema || this.schema;
@@ -55,17 +133,13 @@ Leason.prototype.parse = function(obj, schema, key) {
     }
   } else if(schema.type === 'array') {
     if(obj.length) {
-      schema.items = [];
+      schema.items = []; // init as object, can become [] ?
       this.scanArray(obj, schema);
     }
   } else {
-    // nop, but set title?
-    // note when root is string, we need no key
-    // but normally we need a key..
     if(this.options.addTitle) {
       schema.title = this.options.setTitle(key);
     }
-    // this.setType(obj, schema);
   }
 
 };
