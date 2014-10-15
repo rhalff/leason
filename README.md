@@ -15,7 +15,24 @@ npm i leason -g
 
 Usage:
 
-CLI: `leason my.json`
+CLI:
+```bash
+$ bin/leason 
+
+  Usage: leason [options]
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+    -t, --title    Add titles
+
+  Examples:
+
+    $ leason my.json
+    $ cat my.json | leason > schema.json
+
+```
 
 Script:
 ```javascript
