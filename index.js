@@ -8,6 +8,7 @@ function Leason(options) {
   this.schema = {};
 
   this.options = {
+    addTitle: false,
     setTitle: function(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -48,16 +49,20 @@ Leason.prototype.parse = function(obj, schema, key) {
 
   schema.type = typeOf(obj);
   if(schema.type === 'object') {
-    schema.properties = {};
-    this.scanObject(obj, schema.properties);
+    if(Object.keys(obj).length) {
+      schema.properties = {};
+      this.scanObject(obj, schema.properties);
+    }
   } else if(schema.type === 'array') {
-    schema.items = [];
-    this.scanArray(obj, schema);
+    if(obj.length) {
+      schema.items = [];
+      this.scanArray(obj, schema);
+    }
   } else {
     // nop, but set title?
     // note when root is string, we need no key
     // but normally we need a key..
-    if(this.options.setTitle) {
+    if(this.options.addTitle) {
       schema.title = this.options.setTitle(key);
     }
     // this.setType(obj, schema);
