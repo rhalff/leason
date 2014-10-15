@@ -7,7 +7,7 @@ var Leason  = require('../index');
 
 program
   .version(pkg.version)
-  .option('-t, --title', 'Add titles')
+  .option('-t, --title', 'add titles')
   .parse(process.argv);
 
 program.on('--help', function(){
