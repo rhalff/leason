@@ -10,6 +10,9 @@
       "index.js"
     ]
   },
+  "bin": {
+    "leason": "./bin/leason"
+  },
   "scripts": {
     "test": "tape test/*.js | node_modules/.bin/tap-spec",
     "watch": "npm-watch"
