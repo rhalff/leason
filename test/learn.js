@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tape');
 var Leason = require('../index');
 var yaml = require('js-yaml');
@@ -10,9 +12,11 @@ test('Leason test', function (t) {
 
     glob('./test/fixtures/*.yml', function(err, files) {
 
-      var json, fixture, leason;
+      var fixture, leason;
 
-      t.plan(files.length);
+      var plan = files.length;
+
+      t.plan(plan);
 
       for(var i = 0; i < files.length; i++) {
 
@@ -22,28 +26,34 @@ test('Leason test', function (t) {
           fs.readFileSync(files[i], 'utf8')
         );
 
-        // setting from fixture
-        if(fixture.options) {
-          leason.setOptions(fixture.options);
-        }
+        if(!fixture.options || !fixture.options.skip) {
 
-        leason.parse(fixture.data);
+          // setting from fixture
+          if(fixture.options) {
+            leason.setOptions(fixture.options);
+          }
 
-        if(debug) {
-          console.log(
-            JSON.stringify(fixture.data, null, 2),
-            JSON.stringify(leason.schema, null, 2),
-            JSON.stringify(fixture.schema, null, 2)
+          leason.parse(fixture.data);
+
+          if(debug) {
+            console.log(
+              JSON.stringify(fixture.data, null, 2),
+              JSON.stringify(leason.schema, null, 2),
+              JSON.stringify(fixture.schema, null, 2)
+            );
+          }
+
+          t.deepEqual(
+            leason.schema,
+            fixture.schema,
+            files[i] + ' should detect schema'
           );
+
+          } else {
+            t.plan(--plan);
+          }
+
         }
-
-        t.deepEqual(
-          leason.schema,
-          fixture.schema,
-          files[i] + ' should detect schema'
-        );
-
-      }
 
       t.end();
 

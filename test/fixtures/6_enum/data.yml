@@ -1,0 +1,39 @@
+#
+# Test enum type
+#
+# Enum can only be detected by feeding several documents.
+# So this really depends on a considerable amount of documents being parsed.
+# In general more then 10 or so, but preferably as many as possible.
+#
+# Determining enum is rather complex rule.
+#  - did a value occur multiple times?
+#  - how many times did each value occur.
+#  - if there are many single hits it's probably not enum
+#  - how many records are considered enough for learning?
+#  - certain keywords have a high probability of being enum such as gender
+#    knowledge of that could be used to
+#
+# TODO: There exists a mysql index optimizer which contains the same kind of logic
+#
+---
+  options:
+    captureEnum: 3
+  data:
+    -
+      person:
+        gender: male
+    -
+      person:
+        gender: female
+    -
+      person:
+        gender: female
+    -
+      person:
+        gender: male
+    -
+      person:
+        gender: male
+    -
+      person:
+        gender: unknown
