@@ -9,6 +9,9 @@ The concept of Leason is simple: learn the schema by feeding json documents.
 
 Usage:
 
+CLI: `bin/leason my.json'
+
+Script:
 ```javascript
 
 var Leason = require('leason');
