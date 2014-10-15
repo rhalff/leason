@@ -5,6 +5,19 @@ A JSON schema learner.
 
 The concept of Leason is simple: learn the schema by feeding json documents.
 
+Usage:
+
+```javascript
+
+var Leason = require('leason');
+
+var leason = new Leason()
+leason.parse(json);
+
+console.log(leason.schema);
+
+```
+
 Some goals:
 
 - learn types
