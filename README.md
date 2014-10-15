@@ -3,6 +3,8 @@ Leason
 
 A JSON schema learner.
 
+[![NPM](https://nodei.co/npm/leason.png)](https://nodei.co/npm/leason/)
+
 The concept of Leason is simple: learn the schema by feeding json documents.
 
 Usage:
@@ -10,6 +12,7 @@ Usage:
 ```javascript
 
 var Leason = require('leason');
+var json = require('./package.json');
 
 var leason = new Leason()
 leason.parse(json);
@@ -17,6 +20,101 @@ leason.parse(json);
 console.log(leason.schema);
 
 ```
+
+Result:
+```javascript
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "main": {
+      "type": "string"
+    },
+    "watch": {
+      "type": "object",
+      "properties": {
+        "test": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "bin": {
+      "type": "object",
+      "properties": {
+        "leason": {
+          "type": "string"
+        }
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "properties": {
+        "test": {
+          "type": "string"
+        },
+        "watch": {
+          "type": "string"
+        }
+      }
+    },
+    "author": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "type-of": {
+          "type": "string"
+        },
+        "commander": {
+          "type": "string"
+        }
+      }
+    },
+    "devDependencies": {
+      "type": "object",
+      "properties": {
+        "js-yaml": {
+          "type": "string"
+        },
+        "tape": {
+          "type": "string"
+        },
+        "tap-spec": {
+          "type": "string"
+        },
+        "glob": {
+          "type": "string"
+        },
+        "npm-watch": {
+          "type": "string"
+        },
+        "jshint": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+
+```
+
+As one can see there still is much to be desired.
 
 Some goals:
 
@@ -28,9 +126,4 @@ Some goals:
   that's why treshold.
 - description filling
 - optional title setter. just capitalize, humanize.
-- auto refactor common parts into definitions, key from json is used as the key.
-  you could say, refactor if something had properties or items. when a
-  certain amount of nesting is going on. There could also be a 'same' pattern match.
-  flattening everything to dotted path would be ideal for this. Just sort & detect
-  the duplicates.
-
+- auto refactor common parts into definitions.

@@ -1,7 +1,15 @@
 {
   "name": "leason",
-  "version": "0.0.0",
-  "description": "leason",
+  "version": "0.0.1",
+  "description": "A JSON schema learner",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rhalff/leason.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rhalff/leason/issues"
+  },
+  "homepage": "https://github.com/rhalff/leason",
   "main": "index.js",
   "watch": {
     "test": [
@@ -17,8 +25,8 @@
     "test": "./node_modules/.bin/jshint index.js && tape test/*.js | node_modules/.bin/tap-spec",
     "watch": "npm-watch"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Rob Halff",
+  "license": "MIT",
   "dependencies": {
     "type-of": "^2.0.1",
     "commander": "^2.3.0"
