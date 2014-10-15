@@ -13,7 +13,6 @@ Install:
 npm i leason -g
 ```
 
-Usage:
 
 CLI:
 ```bash
@@ -25,7 +24,7 @@ $ bin/leason
 
     -h, --help     output usage information
     -V, --version  output the version number
-    -t, --title    Add titles
+    -t, --title    add titles
 
   Examples:
 
