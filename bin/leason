@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+var program = require('commander');
+var pkg     = require('../package.json');
+var Leason  = require('../index');
+
+program
+  .version(pkg.version)
+  .parse(process.argv);
+
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ leason my.json');
+  console.log('    $ cat my.json | leason > schema.json');
+  console.log('');
+});
+
+// todo: stream when no file, json pipe
+if(program.args.length === 0) {
+  program.help();
+} else {
+  var file = path.join(process.cwd(), program.args[0]);
+  console.log(file);
+  if(fs.existsSync(file)) {
+    var json = JSON.parse(fs.readFileSync(file).toString());
+    var leason = new Leason();
+    leason.parse(json);
+    console.log(JSON.stringify(leason.schema, null, 2));
+  } else {
+    console.log('File does not exists.');
+  }
+}

@@ -151,6 +151,16 @@ Leason.prototype.postProcessArray = function(schema) {
 
 /**
  *
+ * Read files from stream and learn the structure.
+ *
+ * @param {Object} pipe
+ */
+Leason.prototype.learn = function(pipe) {
+
+};
+
+/**
+ *
  * Parse
  *
  * @param {Object} obj the current (part of the) object to examine

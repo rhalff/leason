@@ -4,7 +4,11 @@
   "description": "leason",
   "main": "index.js",
   "watch": {
-    "test": ["test/*.js", "test/fixtures/*.yml", "index.js"]
+    "test": [
+      "test/*.js",
+      "test/fixtures/*.yml",
+      "index.js"
+    ]
   },
   "scripts": {
     "test": "tape test/*.js | node_modules/.bin/tap-spec",
@@ -13,7 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "type-of": "^2.0.1"
+    "type-of": "^2.0.1",
+    "commander": "^2.3.0"
   },
   "devDependencies": {
     "js-yaml": "^3.2.2",
