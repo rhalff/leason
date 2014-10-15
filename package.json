@@ -4,7 +4,7 @@
   "description": "leason",
   "main": "index.js",
   "watch": {
-    "test": ["{src,test}/**.{js,yml}", "index.js"]
+    "test": ["test/*.js", "test/fixtures/*.yml", "index.js"]
   },
   "scripts": {
     "test": "tape test/*.js | node_modules/.bin/tap-spec",
