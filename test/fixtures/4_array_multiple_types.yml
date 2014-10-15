@@ -1,5 +1,5 @@
 #
-# There a different types of items so output will be:
+# There are different types of items so output will be:
 #
 #  items: [{ type: 'number', type: 'string' }]
 #

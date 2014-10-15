@@ -6,7 +6,6 @@
 #    type: "object"
 #    properties: {
 #      "name": { "type": "string" },
-#      "gender": { "type": "string", "enum": ["male", "female" ] },
 #      "age": { "type": "number" },
 #      "married": { "type": "boolean" }
 #    }
