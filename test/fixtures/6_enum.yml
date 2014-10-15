@@ -1,0 +1,39 @@
+#
+# Test enum type
+#
+# Enum can only be detected by feeding several documents.
+# So this really depends on a considerable amount of documents being parsed.
+# In general more then 10 or so, but preferably as many as possible.
+#
+# For simplicity of testing an array value is used.
+# And we will test if these different values lead to one object type,
+# however with all enums collected.
+#
+# TODO: cover different kind of enums here
+#
+---
+  options:
+    captureEnum: 4
+  data:
+    pickers:
+      - eeny
+      - meeny
+      - miny
+      - moe
+      - moe
+      - eeny
+      - meeny
+
+  schema:
+    '$schema': 'http://json-schema.org/draft-04/schema#'
+    type: "object"
+    properties:
+      pickers:
+        type: "array"
+        items:
+          type: string
+          enum:
+            - eeny
+            - meeny
+            - miny
+            - moe

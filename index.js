@@ -13,8 +13,11 @@ function Leason(options) {
 
   this.schema = {};
 
+  options = options || {};
+
   this.options = {
-    addTitle: false,
+    addTitle: options.addTitle || false,
+    captureEnum: options.captureEnum || false,
     setTitle: function(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -26,6 +29,34 @@ function Leason(options) {
 
   this.setSchemaVersion('draft-04');
 }
+
+/**
+ *
+ * Set option
+ *
+ * @param {String} name
+ * @param {Any} value
+ */
+Leason.prototype.setOption = function(name, value) {
+  if(this.options.hasOwnProperty(name)) {
+    this.options[name] = value;
+  }
+};
+
+/**
+ *
+ * Set options
+ *
+ * @param {Object} options key/value pair of options
+ */
+Leason.prototype.setOptions = function(options) {
+  var opt;
+  for(opt in options) {
+    if(options.hasOwnProperty(opt)) {
+      this.setOption(opt, options[opt]);
+    }
+  }
+};
 
 /**
  *
@@ -89,6 +120,11 @@ Leason.prototype.scanArray = function(obj, schema) {
  * @param {Array} items
  */
 Leason.prototype.postProcessArray = function(schema) {
+
+  // capture enum is relevant in two cases.
+  // when several documents are added & when items of an
+  // array are of the primitive type
+  // untrue..
 
   var known = [];
   var remove = [];

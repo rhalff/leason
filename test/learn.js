@@ -22,6 +22,11 @@ test('Leason test', function (t) {
           fs.readFileSync(files[i], 'utf8')
         );
 
+        // setting from fixture
+        if(fixture.options) {
+          leason.setOptions(fixture.options);
+        }
+
         leason.parse(fixture.data);
 
         if(debug) {
