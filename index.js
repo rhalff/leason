@@ -1,3 +1,5 @@
+'use strict';
+
 var typeOf = require('type-of');
 
 /**
@@ -121,6 +123,8 @@ Leason.prototype.scanArray = function(obj, schema) {
  */
 Leason.prototype.postProcessArray = function(schema) {
 
+  var i;
+
   // capture enum is relevant in two cases.
   // when several documents are added & when items of an
   // array are of the primitive type
@@ -155,7 +159,7 @@ Leason.prototype.postProcessArray = function(schema) {
  *
  * @param {Object} pipe
  */
-Leason.prototype.learn = function(pipe) {
+Leason.prototype.learn = function() {
 
 };
 
