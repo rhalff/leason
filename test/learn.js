@@ -4,6 +4,8 @@ var yaml = require('js-yaml');
 var glob = require('glob');
 var fs = require('fs');
 
+var debug = false;
+
 test('Leason test', function (t) {
 
     glob('./test/fixtures/*.yml', function(err, files) {
@@ -21,6 +23,14 @@ test('Leason test', function (t) {
         );
 
         leason.parse(fixture.data);
+
+        if(debug) {
+          console.log(
+            JSON.stringify(fixture.data, null, 2),
+            JSON.stringify(leason.schema, null, 2),
+            JSON.stringify(fixture.schema, null, 2)
+          );
+        }
 
         t.deepEqual(
           leason.schema,
