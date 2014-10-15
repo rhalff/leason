@@ -67,7 +67,7 @@ Leason.prototype.setOptions = function(options) {
  * @param {String} version Schema version string
  */
 Leason.prototype.setSchemaVersion = function(version) {
-  this.schema['$schema'] = 'http://json-schema.org/' + version + '/schema#';
+  this.schema.$schema = 'http://json-schema.org/' + version + '/schema#';
 };
 
 /**
