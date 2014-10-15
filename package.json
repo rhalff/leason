@@ -9,8 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "type-of": "^2.0.1"
+  },
+  "devDependencies": {
     "mocha": "^1.21.5",
     "should": "^4.0.4",
-    "type-of": "^2.0.1"
+    "js-yaml": "^3.2.2"
   }
 }

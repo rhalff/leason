@@ -1,0 +1,22 @@
+---
+
+  data:
+    one: "hi"
+    two: 2
+    three: false
+    four: []
+    five: {}
+
+  schema:
+    type: "object"
+    properties:
+      one:
+        type: "string"
+      two:
+        type: "number"
+      three:
+        type: "boolean"
+      four:
+        type: "array"
+      five:
+        type: "object"
