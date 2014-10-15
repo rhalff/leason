@@ -7,6 +7,7 @@ var Leason  = require('../index');
 
 program
   .version(pkg.version)
+  .option('-t, --title', 'Add titles')
   .parse(process.argv);
 
 program.on('--help', function(){
@@ -25,7 +26,12 @@ if(program.args.length === 0) {
   console.log(file);
   if(fs.existsSync(file)) {
     var json = JSON.parse(fs.readFileSync(file).toString());
+
     var leason = new Leason();
+    if(program.title) {
+      leason.setOption('addTitle', true);
+    }
+
     leason.parse(json);
     console.log(JSON.stringify(leason.schema, null, 2));
   } else {

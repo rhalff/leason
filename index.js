@@ -187,7 +187,7 @@ Leason.prototype.parse = function(obj, schema, key) {
       this.scanArray(obj, schema);
     }
   } else {
-    if(this.options.addTitle) {
+    if(key && this.options.addTitle) {
       schema.title = this.options.setTitle(key);
     }
   }
