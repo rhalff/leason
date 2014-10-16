@@ -22,7 +22,7 @@
     "leason": "./bin/leason"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint index.js && tape test/*.js | node_modules/.bin/tap-spec",
+    "test": "jshint index.js && tape test/*.js | tap-spec",
     "watch": "npm-watch"
   },
   "author": "Rob Halff",
