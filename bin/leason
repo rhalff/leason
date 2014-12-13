@@ -23,7 +23,6 @@ if(program.args.length === 0) {
   program.help();
 } else {
   var file = path.join(process.cwd(), program.args[0]);
-  console.log(file);
   if(fs.existsSync(file)) {
     var json = JSON.parse(fs.readFileSync(file).toString());
 
