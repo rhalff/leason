@@ -26,15 +26,15 @@ program
   .version(pkg.version)
   .option('-t, --title', 'add titles')
   .option('-d, --default', 'add defaults')
+  .on('--help', function(){
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ leason my.json');
+    console.log('    $ cat my.json | leason > schema.json');
+    console.log('');
+  })
   .parse(process.argv);
 
-program.on('--help', function(){
-  console.log('  Examples:');
-  console.log('');
-  console.log('    $ leason my.json');
-  console.log('    $ cat my.json | leason > schema.json');
-  console.log('');
-});
 
 // todo: stream when no file, json pipe
 if(program.args.length === 0) {

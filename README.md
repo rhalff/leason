@@ -16,7 +16,7 @@ npm i leason -g
 
 CLI:
 ```bash
-$ bin/leason 
+$ bin/leason
 
   Usage: leason [options]
 
@@ -25,6 +25,7 @@ $ bin/leason
     -h, --help     output usage information
     -V, --version  output the version number
     -t, --title    add titles
+    -d, --default  add defaults
 
   Examples:
 
