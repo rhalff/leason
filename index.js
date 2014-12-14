@@ -1,6 +1,7 @@
 'use strict';
 
 var typeOf = require('type-of');
+var Schema = require('./schema');
 
 /**
  *
@@ -13,12 +14,17 @@ function Leason(options) {
     return new Leason();
   }
 
-  this.schema = {};
+  this.schema = new Schema();
+
+  // dotmap could give easy access to the keys.
+  // so change this to it's own class
+  this.dotMap = {};
 
   options = options || {};
 
   this.options = {
     addTitle: options.addTitle || false,
+    addDefault: options.addDefault || false,
     captureEnum: options.captureEnum || false,
     setTitle: function(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -80,24 +86,24 @@ Leason.prototype.setSchemaVersion = function(version) {
  * @param {Object} obj current object location
  * @param {Object} properties a properties section within a schema
  */
-Leason.prototype.scanObject = function(obj, properties) {
+Leason.prototype.scanObject = function(obj, properties, position) {
   var key;
   for(key in obj) {
     if(obj.hasOwnProperty(key)) {
       properties[key] = {};
-      this.parse(obj[key], properties[key], key);
+      this.parse(obj[key], properties[key], key, position.slice());
     }
   }
 };
 
 /**
  *
- * Reduces the set of items into unique definitions.
+ * Iterates the items of an array.
  *
  * @param {Object} obj current object location
  * @param {Object} schema the current schema section
  */
-Leason.prototype.scanArray = function(obj, schema) {
+Leason.prototype.scanArray = function(obj, schema, position) {
   var i;
   for(i = 0; i < obj.length; i++) {
     // Initial format will be [{},{}]
@@ -107,7 +113,7 @@ Leason.prototype.scanArray = function(obj, schema) {
     // should be able to detect duplicates.
     // or just also do that in the postprocess.
     // first just colllect everything, then merge them back.
-    this.parse(obj[i], schema.items[i]);
+    this.parse(obj[i], schema.items[i], i, position.slice());
   }
 
   // here we determine the correct format
@@ -165,31 +171,63 @@ Leason.prototype.learn = function() {
 
 /**
  *
+ * Load a schema
+ *
+ * @param {Object} schema Current schema object
+ */
+Leason.prototype.load = function(schema) {
+  this.schema = new Schema(schema);
+};
+
+Leason.prototype._setDefault = function(schema, val) {
+  if (this.options.addDefault) {
+    schema['default'] = val;
+  }
+};
+
+/**
+ *
  * Parse
  *
  * @param {Object} obj the current (part of the) object to examine
  * @param {Object} schema Current schema part
  * @param {String} key Optional key used during iteration
+ * @param {String} position Current position in array format
  */
-Leason.prototype.parse = function(obj, schema, key) {
+Leason.prototype.parse = function(obj, schema, key, position) {
 
   schema = schema || this.schema;
+
+  position = position || [];
+
+  // keep track of our position.
+  // maybe this is too late and it should be done within
+  // the scan methods. let's first build the hash table.
+  if(key !== undefined) position.push(key);
+
+  var dotkey = position.join('.');
+
+  if(!this.dotMap.hasOwnProperty(dotkey)) {
+    this.dotMap[dotkey] = new Schema();
+  }
 
   schema.type = typeOf(obj);
   if(schema.type === 'object') {
     if(Object.keys(obj).length) {
       schema.properties = {};
-      this.scanObject(obj, schema.properties);
+      this.scanObject(obj, schema.properties, position);
     }
   } else if(schema.type === 'array') {
     if(obj.length) {
       schema.items = []; // init as object, can become [] ?
-      this.scanArray(obj, schema);
+      this.scanArray(obj, schema, position);
     }
   } else {
+    //console.log(position, this.dotMap);
     if(key && this.options.addTitle) {
       schema.title = this.options.setTitle(key);
     }
+    this._setDefault(schema, obj);
   }
 
 };

@@ -1,0 +1,30 @@
+#
+# Test the primitives
+#
+---
+  options:
+    addDefault: true
+  data:
+    one: "hi"
+    two: 2
+    three: false
+    four: []
+    five: {}
+
+  schema:
+    '$schema': 'http://json-schema.org/draft-04/schema#'
+    type: "object"
+    properties:
+      one:
+        type: "string"
+        default: "hi"
+      two:
+        type: "number"
+        default: 2
+      three:
+        type: "boolean"
+        default: false
+      four:
+        type: "array"
+      five:
+        type: "object"

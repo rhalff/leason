@@ -28,8 +28,9 @@
   "author": "Rob Halff",
   "license": "MIT",
   "dependencies": {
-    "type-of": "^2.0.1",
-    "commander": "^2.3.0"
+    "commander": "^2.3.0",
+    "stdin": "0.0.1",
+    "type-of": "^2.0.1"
   },
   "devDependencies": {
     "js-yaml": "^3.2.2",

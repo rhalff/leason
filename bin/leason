@@ -1,13 +1,31 @@
 #!/usr/bin/env node
+
+'use strict';
+
 var fs = require('fs');
+var stdin = require('stdin');
 var path = require('path');
 var program = require('commander');
-var pkg     = require('../package.json');
+var pkg = require('../package.json');
 var Leason  = require('../index');
+
+function parse(str) {
+
+  var json = JSON.parse(str);
+
+  var leason = new Leason();
+  leason.setOption('addTitle', program.title);
+  leason.setOption('addDefault', program.default);
+
+  leason.parse(json);
+
+  console.log(JSON.stringify(leason.schema, null, 2));
+}
 
 program
   .version(pkg.version)
   .option('-t, --title', 'add titles')
+  .option('-d, --default', 'add defaults')
   .parse(process.argv);
 
 program.on('--help', function(){
@@ -20,19 +38,11 @@ program.on('--help', function(){
 
 // todo: stream when no file, json pipe
 if(program.args.length === 0) {
-  program.help();
+  stdin(parse);
 } else {
   var file = path.join(process.cwd(), program.args[0]);
   if(fs.existsSync(file)) {
-    var json = JSON.parse(fs.readFileSync(file).toString());
-
-    var leason = new Leason();
-    if(program.title) {
-      leason.setOption('addTitle', true);
-    }
-
-    leason.parse(json);
-    console.log(JSON.stringify(leason.schema, null, 2));
+    parse(fs.readFileSync(file).toString());
   } else {
     console.log('File does not exists.');
   }
