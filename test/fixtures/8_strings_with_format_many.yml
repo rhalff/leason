@@ -1,0 +1,38 @@
+#
+# Array containing an object
+# This only takes similar objects into account
+#
+#  items: {
+#    type: "object"
+#    properties: {
+#      "name": { "type": "string" },
+#      "gender": { "type": "string", "enum": ["male", "female" ] },
+#      "age": { "type": "number" },
+#      "married": { "type": "boolean" }
+#    }
+#  }
+#
+---
+options:
+  captureFormat:
+    minCount: 2
+data:
+  people:
+    -
+      email: test1@test.com
+    -
+      email: test2@test.com
+    -
+      email: test3@test.com
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    people:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          email:
+            type: "string"
+            format: email
