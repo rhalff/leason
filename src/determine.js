@@ -22,8 +22,8 @@ export default class Determine {
     const types = {}
     for (let type of formatKeys) {
       for (let i = 0; i < this.values.length; i++) {
+        if (!types[type]) types[type] = [0, 0] // [count, empty]
         if (this.values[i]) { // do not check empty values
-          if (!types[type]) types[type] = [0, 0] // [count, empty]
           if (formats[type](this.values[i])) {
             types[type][0]++
           }
