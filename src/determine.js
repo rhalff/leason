@@ -24,13 +24,14 @@ export default class Determine {
       for (let i = 0; i < this.values.length; i++) {
         if (this.values[i]) { // do not check empty values
           if (!types[type]) types[type] = [0, 0] // [count, empty]
-          types[type][0] = formats[type](this.values[i]) ? ++types[type][0] : 1
+          if (formats[type](this.values[i])) {
+            types[type][0]++
+          }
         } else {
           types[type][1]++
         }
       }
     }
-
     for (let type of formatKeys) {
       if ((types[type][0] + types[type][1]) === this.values.length) {
         return type
