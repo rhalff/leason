@@ -17,30 +17,15 @@
  * The values must be kept in a circular array, which length is configurable
  * e.g. you do not want to keep 50 thousand values in memory.
  *
- * Ok, I will not offer load schema functionality, or will I.
- * Well you have to, the json feeding is different from schema feeding.
- *
- * Let's just first not load a schema
- *
- * Leason will have to keep track on where it is, right now it does not.
- * Leason will have to keep track on where it is, right now it does not.
- *
- *
  */
-function Schema(schema) {
-
-  if(!(this instanceof Schema)) return new Schema();
-
-  if(schema) {
-
-    this.load(schema);
-
+export default class Schema {
+  constructor (schema) {
+    if (schema) {
+      this.load(schema)
+    }
   }
 
+  load (/* schema */) {}
 }
 
-Schema.prototype.load = function(/*schema*/) {
-
-};
-
-module.exports = Schema;
+module.exports = Schema

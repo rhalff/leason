@@ -47,4 +47,3 @@ schema:
             type: "number"
           married:
             type: "boolean"
-            type: "string"

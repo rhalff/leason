@@ -1,0 +1,21 @@
+#
+# There is only one type here so the format will still be:
+#
+#  items: { type: "number" }
+#
+# Test whether multiple numbers results in just one definition
+---
+data:
+  four: [0,-22,"2"]
+
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    four:
+      type: "array"
+      items:
+        -
+          type: "number"
+        -
+          type: "string"

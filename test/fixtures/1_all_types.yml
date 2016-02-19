@@ -8,6 +8,7 @@
     three: false
     four: []
     five: {}
+    six: "2"
 
   schema:
     '$schema': 'http://json-schema.org/draft-04/schema#'
@@ -23,3 +24,5 @@
         type: "array"
       five:
         type: "object"
+      six:
+        type: "string"
