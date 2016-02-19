@@ -2,7 +2,7 @@
 import typeOf from 'type-of'
 import Schema from './schema'
 import Determine from './determine'
-import {omitEnum} from './util'
+import {omitter} from './util'
 
 /**
  *
@@ -130,7 +130,7 @@ class Leason {
     const remove = []
     for (i = 0; i < schema.items.length; i++) {
       // Stringify trick, will fail if key order is different.
-      var res = JSON.stringify(schema.items[i], omitEnum)
+      var res = JSON.stringify(schema.items[i], omitter)
       if (known.indexOf(res) === -1) {
         known.push(res)
       } else {

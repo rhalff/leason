@@ -47,8 +47,8 @@ export function mode (array) {
  * @param val
  * @returns {*}
  */
-export function omitEnum (key, val) {
-  if (key === 'enum') {
+export function omitter (key, val) {
+  if (key === 'enum' || key === 'default') {
     return undefined
   }
   return val
