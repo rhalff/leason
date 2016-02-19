@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rhalff/leason.png)](https://travis-ci.org/rhalff/leason)
+
 Leason
 ======
 
