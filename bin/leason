@@ -16,6 +16,15 @@ function parse(str) {
   var leason = new Leason();
   leason.setOption('addTitle', program.title);
   leason.setOption('addDefault', program.default);
+  if (program.enum) {
+    leason.setOption('captureEnum', {
+      minCount: 1,
+      maxVariant: 10
+    })
+  }
+  if (program.format) {
+    leason.setOption('captureFormat', {minCount: 1})
+  }
 
   leason.parse(json);
 
@@ -25,6 +34,8 @@ function parse(str) {
 program
   .version(pkg.version)
   .option('-t, --title', 'add titles')
+  .option('-f, --format', 'try to detect format')
+  .option('-e, --enum', 'try to detect enum')
   .option('-d, --default', 'add defaults')
   .on('--help', function(){
     console.log('  Examples:');
