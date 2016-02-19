@@ -14,6 +14,6 @@ export default {
   time: (str) => jgf['time'].regex.test(str),
   ipv6: (str) => reg.ipv6.test(str),
   ipv4: (str) => reg.ipv4.test(str),
-  hostname: (str) => reg.hostname.test(str),
+  // hostname: (str) => reg.hostname.test(str),
   uri: (str) => jgf['uri'].regex.test(str)
 }
