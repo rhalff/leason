@@ -19,6 +19,7 @@
     "watch": "npm -s test -- --watch",
     "build": "babel src --out-dir lib",
     "lint": "standard src/*.js",
+    "prepublish": "npm run build",
     "format": "standard --format src/*.js"
   },
   "author": "Rob Halff",
