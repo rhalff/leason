@@ -1,21 +1,19 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'
 
-var fs = require('fs');
-var stdin = require('stdin');
-var path = require('path');
-var program = require('commander');
-var pkg = require('../package.json');
-var Leason  = require('../lib/index');
+const fs = require('fs')
+const stdin = require('stdin')
+const path = require('path')
+const program = require('commander')
+const pkg = require('../package.json')
+const Leason = require('../lib/index')
 
-function parse(str) {
-
-  var json = JSON.parse(str);
-
-  var leason = new Leason();
-  leason.setOption('addTitle', program.title);
-  leason.setOption('addDefault', program.default);
+function parse (str) {
+  const json = JSON.parse(str)
+  const leason = new Leason()
+  leason.setOption('addTitle', program.title)
+  leason.setOption('addDefault', program.default)
   if (program.enum) {
     leason.setOption('captureEnum', {
       minCount: 1,
@@ -26,9 +24,9 @@ function parse(str) {
     leason.setOption('captureFormat', {minCount: 1})
   }
 
-  leason.parse(json);
+  leason.parse(json)
 
-  console.log(JSON.stringify(leason.schema, null, 2));
+  console.log(JSON.stringify(leason.schema, null, 2))
 }
 
 program
@@ -37,24 +35,23 @@ program
   .option('-f, --format', 'try to detect format')
   .option('-e, --enum', 'try to detect enum')
   .option('-d, --default', 'add defaults')
-  .on('--help', function(){
-    console.log('  Examples:');
-    console.log('');
-    console.log('    $ leason my.json');
-    console.log('    $ cat my.json | leason > schema.json');
-    console.log('');
+  .on('--help', () => {
+    console.log('  Examples:')
+    console.log('')
+    console.log('    $ leason my.json')
+    console.log('    $ cat my.json | leason > schema.json')
+    console.log('')
   })
-  .parse(process.argv);
-
+  .parse(process.argv)
 
 // todo: stream when no file, json pipe
-if(program.args.length === 0) {
-  stdin(parse);
+if (program.args.length === 0) {
+  stdin(parse)
 } else {
-  var file = path.join(process.cwd(), program.args[0]);
-  if(fs.existsSync(file)) {
-    parse(fs.readFileSync(file).toString());
+  const file = path.join(process.cwd(), program.args[0])
+  if (fs.existsSync(file)) {
+    parse(fs.readFileSync(file).toString())
   } else {
-    console.log('File does not exists.');
+    console.log('File does not exists.')
   }
 }

@@ -18,7 +18,7 @@
     "test": "mocha --opts config/mocha.opts",
     "watch": "npm -s test -- --watch",
     "build": "babel src --out-dir lib",
-    "lint": "standard src/*.js",
+    "lint": "standard bin/* src/*.js",
     "prepublish": "npm run build",
     "format": "standard --format src/*.js"
   },
