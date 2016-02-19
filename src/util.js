@@ -48,7 +48,7 @@ export function mode (array) {
  * @returns {*}
  */
 export function omitter (key, val) {
-  if (key === 'enum' || key === 'default') {
+  if (key === 'enum' || key === 'default' || key === 'format') {
     return undefined
   }
   return val
