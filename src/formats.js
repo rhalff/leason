@@ -12,7 +12,6 @@ export default {
   'date-time': (str) => jgf['date-time'].regex.test(str),
   date: (str) => jgf['date'].regex.test(str),
   time: (str) => jgf['time'].regex.test(str),
-  phone: (str) => jgf['phone'].func(str),
   ipv6: (str) => reg.ipv6.test(str),
   ipv4: (str) => reg.ipv4.test(str),
   hostname: (str) => reg.hostname.test(str),

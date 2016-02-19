@@ -9,7 +9,6 @@
     email: "test@example.com"
     dateTime: "2000-12-01T22:00:23Z"
     date: "2012-04-05"
-    phone: "111-2222-3333"
     uri: "http://json-schema.org/draft-04/schema#"
     ipv4: 146.1.1.1
     ipv6: fe80::2e81:58ff:fefa:4986
@@ -27,9 +26,6 @@
       date:
         type: "string"
         format: "date"
-      phone:
-        type: "string"
-        format: "phone"
       uri:
         type: "string"
         format: "uri"
