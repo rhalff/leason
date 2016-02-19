@@ -1,0 +1,23 @@
+---
+options:
+  captureFormat:
+    minCount: 2
+data:
+  people:
+    -
+      email: test1@test.com
+    -
+      email: test2@test.com
+    -
+      email: not-an-email
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    people:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          email:
+            type: "string"
