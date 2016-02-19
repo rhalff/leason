@@ -7,6 +7,15 @@ export function arrayUnique (a) {
   }, [])
 }
 
+export function arrayCount (arr) {
+  const counts = {}
+  for (let i = 0; i < arr.length; i++) {
+    const key = arr[i]
+    counts[key] = counts[key] ? counts[key]++ : 1
+  }
+  return counts
+}
+
 export function mode (array) {
   if (array.length === 0) {
     return null
@@ -28,4 +37,19 @@ export function mode (array) {
     }
   }
   return maxEl
+}
+
+/**
+ *
+ * Used to omit `enum` during comparison
+ *
+ * @param key
+ * @param val
+ * @returns {*}
+ */
+export function omitEnum (key, val) {
+  if (key === 'enum') {
+    return undefined
+  }
+  return val
 }

@@ -2,6 +2,7 @@
 import typeOf from 'type-of'
 import Schema from './schema'
 import Determine from './determine'
+import {omitEnum} from './util'
 
 /**
  *
@@ -129,7 +130,7 @@ class Leason {
     const remove = []
     for (i = 0; i < schema.items.length; i++) {
       // Stringify trick, will fail if key order is different.
-      var res = JSON.stringify(schema.items[i])
+      var res = JSON.stringify(schema.items[i], omitEnum)
       if (known.indexOf(res) === -1) {
         known.push(res)
       } else {
@@ -217,6 +218,17 @@ class Leason {
       }
 
       const type = this.dotMap[dotkey].determineType()
+
+      if ((type === 'string' || type === 'number') &&
+        this.options.captureEnum.minCount > 0) {
+        const _enum = this.dotMap[dotkey].determineEnum(
+          this.options.captureEnum.minCount,
+          this.options.captureEnum.maxVariant
+        )
+        if (_enum) {
+          schema.enum = _enum
+        }
+      }
       schema['type'] = type
     }
   }
