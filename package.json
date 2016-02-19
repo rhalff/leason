@@ -26,6 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.9.0",
+    "rfc822-validate": "^1.0.0",
     "stdin": "0.0.1",
     "type-of": "^2.0.1"
   },

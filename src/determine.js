@@ -1,5 +1,8 @@
 import {arrayCount, mode} from './util'
 import typeOf from 'type-of'
+import formats from './formats'
+
+const formatKeys = Object.keys(formats)
 
 export default class Determine {
   constructor () {
@@ -12,6 +15,28 @@ export default class Determine {
       type = typeOf(this.values[i])
     }
     return type
+  }
+
+  determineFormat (minCount) {
+    // determine if *all* match the formatter
+    const types = {}
+    for (let type of formatKeys) {
+      for (let i = 0; i < this.values.length; i++) {
+        if (this.values[i]) { // do not check empty values
+          if (!types[type]) types[type] = [0, 0] // [count, empty]
+          types[type][0] = formats[type](this.values[i]) ? ++types[type][0] : 1
+        } else {
+          types[type][1]++
+        }
+      }
+    }
+
+    for (let type of formatKeys) {
+      if ((types[type][0] + types[type][1]) === this.values.length) {
+        return type
+      }
+    }
+    return false
   }
 
   /**

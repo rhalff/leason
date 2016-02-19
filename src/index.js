@@ -21,7 +21,8 @@ class Leason {
     this.options = {
       addTitle: options.addTitle || false,
       addDefault: options.addDefault || false,
-      captureEnum: options.captureEnum || false,
+      captureEnum: options.captureEnum || {},
+      captureFormat: options.captureFormat || {},
       setTitle: function (str) {
         return str.charAt(0).toUpperCase() + str.slice(1)
       }
@@ -227,6 +228,14 @@ class Leason {
         )
         if (_enum) {
           schema.enum = _enum
+        }
+      }
+      if (type === 'string' && this.options.captureFormat.minCount > 0) {
+        const _format = this.dotMap[dotkey].determineFormat(
+          this.options.captureFormat.minCount
+        )
+        if (_format) {
+          schema.format = _format
         }
       }
       schema['type'] = type
