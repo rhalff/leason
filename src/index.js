@@ -196,16 +196,16 @@ class Leason {
     }
   }
 
-  scanPrimitive (dotkey, obj, schema, key) {
-    this.classifiers[dotkey].values.push(obj)
+  scanPrimitive (path, obj, schema, key) {
+    this.classifiers[path].values.push(obj)
 
     this.setTitle(schema, key)
 
     // Note this is constantly being revaluated
-    this.setDefault(schema, dotkey)
-    this.setPrimitiveType(schema, dotkey)
-    this.setEnum(schema, dotkey)
-    this.setFormat(schema, dotkey)
+    this.setDefault(schema, path)
+    this.setPrimitiveType(schema, path)
+    this.setEnum(schema, path)
+    this.setFormat(schema, path)
   }
 
   /**
