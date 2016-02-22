@@ -14,9 +14,7 @@ class Leason {
   constructor (options = {}) {
     this.schema = new Schema()
 
-    // dotmap could give easy access to the keys.
-    // so change this to it's own class
-    this.classifiers = {}
+    this.classifiers = new Map()
 
     this.options = {
       addTitle: options.addTitle || false,
@@ -158,7 +156,8 @@ class Leason {
   setEnum (schema, key) {
     if ((schema.type === 'string' || schema.type === 'number') &&
       this.options.captureEnum.minCount > 0) {
-      const _enum = this.classifiers[key].determineEnum(
+      const classifier = this.classifiers.get(key)
+      const _enum = classifier.determineEnum(
         this.options.captureEnum.minCount,
         this.options.captureEnum.maxVariant
       )
@@ -170,7 +169,8 @@ class Leason {
 
   setFormat (schema, key) {
     if (schema.type === 'string' && this.options.captureFormat.minCount > 0) {
-      const _format = this.classifiers[key].determineFormat(
+      const classifier = this.classifiers.get(key)
+      const _format = classifiers.determineFormat(
         this.options.captureFormat.minCount
       )
       if (_format) {
@@ -180,7 +180,8 @@ class Leason {
   }
 
   setPrimitiveType (schema, key) {
-    const type = this.classifiers[key].determineType()
+    const classifier = this.classifiers.get(key)
+    const type = classifier.determineType()
     schema['type'] = type
   }
 
@@ -192,12 +193,15 @@ class Leason {
 
   setDefault (schema, key) {
     if (this.options.addDefault) {
-      schema['default'] = this.classifiers[key].determineDefault()
+      const classifier = this.classifiers.get(key)
+      schema['default'] = classifier.determineDefault()
     }
   }
 
   scanPrimitive (path, obj, schema, key) {
-    this.classifiers[path].values.push(obj)
+    const classifier = this.classifiers.get(path)
+
+    classifier.addValue(obj)
 
     this.setTitle(schema, key)
 
@@ -236,8 +240,8 @@ class Leason {
   }
 
   initClassifierForKey (key) {
-    if (!this.classifiers.hasOwnProperty(key)) {
-      this.classifiers[key] = new Classifier()
+    if (!this.classifiers.has(key)) {
+      this.classifiers.set(key, new Classifier())
     }
   }
 
