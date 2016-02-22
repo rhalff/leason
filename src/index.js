@@ -107,14 +107,9 @@ class Leason {
         // use postProcess to determine the best format.
         // which can be anyOf or just an [] with valid types.
         schema.items[i] = {}
-        // should be able to detect duplicates.
-        // or just also do that in the postprocess.
-        // first just colllect everything, then merge them back.
         this.parseSchemaPart(obj[i], schema.items[i], i, position.slice())
       }
 
-      // here we determine the correct format
-      // which for now is just only removing duplicates.
       this.postProcessArray(schema)
     }
   }
@@ -126,10 +121,6 @@ class Leason {
    * @param {Array} items
    */
   postProcessArray (schema) {
-    // capture enum is relevant in two cases.
-    // when several documents are added & when items of an
-    // array are of the primitive type
-    // untrue..
     let i
     const known = []
     const remove = []
