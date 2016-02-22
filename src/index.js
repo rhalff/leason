@@ -1,7 +1,7 @@
 'use strict'
 import typeOf from 'type-of'
 import Schema from './schema'
-import Determine from './determine'
+import Classifier from './classifier'
 import {omitter} from './util'
 
 /**
@@ -16,7 +16,7 @@ class Leason {
 
     // dotmap could give easy access to the keys.
     // so change this to it's own class
-    this.dotMap = {}
+    this.classifiers = {}
 
     this.options = {
       addTitle: options.addTitle || false,
@@ -82,11 +82,14 @@ class Leason {
    * @param {Object} obj current object location
    * @param {Object} properties a properties section within a schema
    */
-  scanObject (obj, properties, position) {
-    for (let key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        properties[key] = {}
-        this.parse(obj[key], properties[key], key, position.slice())
+  scanObject (obj, schema, position) {
+    if (Object.keys(obj).length) {
+      schema.properties = {}
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          schema.properties[key] = {}
+          this.parseSchemaPart(obj[key], schema.properties[key], key, position.slice())
+        }
       }
     }
   }
@@ -99,20 +102,23 @@ class Leason {
    * @param {Object} schema the current schema section
    */
   scanArray (obj, schema, position) {
-    for (let i = 0; i < obj.length; i++) {
-      // Initial format will be [{},{}]
-      // use postProcess to determine the best format.
-      // which can be anyOf or just an [] with valid types.
-      schema.items[i] = {}
-      // should be able to detect duplicates.
-      // or just also do that in the postprocess.
-      // first just colllect everything, then merge them back.
-      this.parse(obj[i], schema.items[i], i, position.slice())
-    }
+    if (obj.length) {
+      schema.items = [] // init as object, can become [] ?
+      for (let i = 0; i < obj.length; i++) {
+        // Initial format will be [{},{}]
+        // use postProcess to determine the best format.
+        // which can be anyOf or just an [] with valid types.
+        schema.items[i] = {}
+        // should be able to detect duplicates.
+        // or just also do that in the postprocess.
+        // first just colllect everything, then merge them back.
+        this.parseSchemaPart(obj[i], schema.items[i], i, position.slice())
+      }
 
-    // here we determine the correct format
-    // which for now is just only removing duplicates.
-    this.postProcessArray(schema)
+      // here we determine the correct format
+      // which for now is just only removing duplicates.
+      this.postProcessArray(schema)
+    }
   }
 
   /**
@@ -149,6 +155,72 @@ class Leason {
     }
   }
 
+  setEnum (schema) {
+    if ((schema.type === 'string' || schema.type === 'number') &&
+      this.options.captureEnum.minCount > 0) {
+      const _enum = this.classifiers[dotkey].determineEnum(
+        this.options.captureEnum.minCount,
+        this.options.captureEnum.maxVariant
+      )
+      if (_enum) {
+        schema.enum = _enum
+      }
+    }
+  }
+
+  setFormat (schema) {
+    if (schema.type === 'string' && this.options.captureFormat.minCount > 0) {
+      const _format = this.classifiers[dotkey].determineFormat(
+        this.options.captureFormat.minCount
+      )
+      if (_format) {
+        schema.format = _format
+      }
+    }
+  }
+
+  setPrimitiveType (schema, key) {
+    const type = this.classifiers[key].determineType()
+    schema['type'] = type
+  }
+
+  setTitle (schema, key) {
+    if (key && this.options.addTitle) {
+      schema.title = this.options.setTitle(key)
+    }
+  }
+
+  setDefault (schema, key) {
+    if (this.options.addDefault) {
+      schema['default'] = this.classifiers[key].determineDefault()
+    }
+  }
+
+  scanPrimitive (dotkey, obj, schema, key) {
+    this.classifiers[dotkey].values.push(obj)
+
+    this.setTitle(schema, key)
+
+    // Note this is constantly being revaluated
+    this.setDefault(schema, dotkey)
+    this.setPrimitiveType(schema, dotkey)
+    this.setEnum(schema)
+    this.setFormat(schema)
+  }
+
+  /**
+   * Translates the position into a dotted path
+   *
+   * All array items are treated equal, eg. [0] [1] all become [x]
+   *
+   * @param position
+   * @returns {string}
+   */
+  getAbsolutePath(position) {
+    return position.join('.')
+      .replace(/\.\d+/g, '.x')
+  }
+
   /**
    *
    * Load a schema
@@ -159,86 +231,42 @@ class Leason {
     this.schema = new Schema(schema)
   }
 
-  _setDefault (schema, val) {
-    if (this.options.addDefault) {
-      schema['default'] = val
+  parse (obj) {
+    this.parseSchemaPart(obj, this.schema)
+  }
+
+  initClassifierForKey(key) {
+    if (!this.classifiers.hasOwnProperty(key)) {
+      this.classifiers[key] = new Classifier()
     }
   }
 
   /**
    *
-   * Parse
+   * Parse Schema Part
    *
    * @param {Object} obj the current (part of the) object to examine
    * @param {Object} schemaPart Current schema part
    * @param {String} key Optional key used during iteration
    * @param {String} position Current position in array format
    */
-  parse (obj, schemaPart, key, position = []) {
-    const schema = schemaPart || this.schema
-
+  parseSchemaPart (obj, schemaPart, key, position = []) {
     // keep track of our position.
-    // maybe this is too late and it should be done within
-    // the scan methods. let's first build the hash table.
     if (key !== undefined) {
       position.push(key)
     }
 
-    let dotkey = position.join('.')
+    const path = this.getAbsolutePath(position)
+    this.initClassifierForKey(path)
 
-    // treat array items equal, eg. [0] [1] all treated as [x]
-    dotkey = dotkey.replace(/\.\d+/g, '.x')
+    schemaPart.type = typeOf(obj)
 
-    if (!this.dotMap.hasOwnProperty(dotkey)) {
-      this.dotMap[dotkey] = new Determine()
-    }
-
-    schema.type = typeOf(obj)
-    if (schema.type === 'object') {
-      if (Object.keys(obj).length) {
-        schema.properties = {}
-        this.scanObject(obj, schema.properties, position)
-      }
-    } else if (schema.type === 'array') {
-      if (obj.length) {
-        schema.items = [] // init as object, can become [] ?
-        this.scanArray(obj, schema, position)
-      }
+    if (schemaPart.type === 'object') {
+      this.scanObject(obj, schemaPart, position)
+    } else if (schemaPart.type === 'array') {
+      this.scanArray(obj, schemaPart, position)
     } else {
-      // console.log(position, this.dotMap)
-      this.dotMap[dotkey].values.push(obj)
-
-      if (key && this.options.addTitle) {
-        schema.title = this.options.setTitle(key)
-      }
-
-      // this._setDefault(schema, obj)
-      // Note this is constantly being revaluated
-      if (this.options.addDefault) {
-        schema['default'] = this.dotMap[dotkey].determineDefault()
-      }
-
-      const type = this.dotMap[dotkey].determineType()
-
-      if ((type === 'string' || type === 'number') &&
-        this.options.captureEnum.minCount > 0) {
-        const _enum = this.dotMap[dotkey].determineEnum(
-          this.options.captureEnum.minCount,
-          this.options.captureEnum.maxVariant
-        )
-        if (_enum) {
-          schema.enum = _enum
-        }
-      }
-      if (type === 'string' && this.options.captureFormat.minCount > 0) {
-        const _format = this.dotMap[dotkey].determineFormat(
-          this.options.captureFormat.minCount
-        )
-        if (_format) {
-          schema.format = _format
-        }
-      }
-      schema['type'] = type
+      this.scanPrimitive(path, obj, schemaPart, key)
     }
   }
 }

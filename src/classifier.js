@@ -4,7 +4,7 @@ import formats from './formats'
 
 const formatKeys = Object.keys(formats)
 
-export default class Determine {
+export default class Classifier {
   constructor () {
     this.values = []
   }
