@@ -155,10 +155,10 @@ class Leason {
     }
   }
 
-  setEnum (schema) {
+  setEnum (schema, key) {
     if ((schema.type === 'string' || schema.type === 'number') &&
       this.options.captureEnum.minCount > 0) {
-      const _enum = this.classifiers[dotkey].determineEnum(
+      const _enum = this.classifiers[key].determineEnum(
         this.options.captureEnum.minCount,
         this.options.captureEnum.maxVariant
       )
@@ -168,9 +168,9 @@ class Leason {
     }
   }
 
-  setFormat (schema) {
+  setFormat (schema, key) {
     if (schema.type === 'string' && this.options.captureFormat.minCount > 0) {
-      const _format = this.classifiers[dotkey].determineFormat(
+      const _format = this.classifiers[key].determineFormat(
         this.options.captureFormat.minCount
       )
       if (_format) {
@@ -204,8 +204,8 @@ class Leason {
     // Note this is constantly being revaluated
     this.setDefault(schema, dotkey)
     this.setPrimitiveType(schema, dotkey)
-    this.setEnum(schema)
-    this.setFormat(schema)
+    this.setEnum(schema, dotkey)
+    this.setFormat(schema, dotkey)
   }
 
   /**
@@ -216,7 +216,7 @@ class Leason {
    * @param position
    * @returns {string}
    */
-  getAbsolutePath(position) {
+  getAbsolutePath (position) {
     return position.join('.')
       .replace(/\.\d+/g, '.x')
   }
@@ -235,7 +235,7 @@ class Leason {
     this.parseSchemaPart(obj, this.schema)
   }
 
-  initClassifierForKey(key) {
+  initClassifierForKey (key) {
     if (!this.classifiers.hasOwnProperty(key)) {
       this.classifiers[key] = new Classifier()
     }
