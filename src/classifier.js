@@ -8,6 +8,10 @@ export default class Classifier {
   constructor () {
     this.values = []
   }
+ 
+  addValue(obj) {
+    this.values.push(obj)
+  }
 
   determineType () {
     let type
