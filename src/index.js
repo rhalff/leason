@@ -153,10 +153,10 @@ class Leason {
     }
   }
 
-  setEnum (schema, key) {
+  setEnum (schema, path) {
     if ((schema.type === 'string' || schema.type === 'number') &&
       this.options.captureEnum.minCount > 0) {
-      const classifier = this.classifiers.get(key)
+      const classifier = this.classifiers.get(path)
       const _enum = classifier.determineEnum(
         this.options.captureEnum.minCount,
         this.options.captureEnum.maxVariant
@@ -167,9 +167,9 @@ class Leason {
     }
   }
 
-  setFormat (schema, key) {
+  setFormat (schema, path) {
     if (schema.type === 'string' && this.options.captureFormat.minCount > 0) {
-      const classifier = this.classifiers.get(key)
+      const classifier = this.classifiers.get(path)
       const _format = classifiers.determineFormat(
         this.options.captureFormat.minCount
       )
@@ -179,8 +179,8 @@ class Leason {
     }
   }
 
-  setPrimitiveType (schema, key) {
-    const classifier = this.classifiers.get(key)
+  setPrimitiveType (schema, path) {
+    const classifier = this.classifiers.get(path)
     const type = classifier.determineType()
     schema['type'] = type
   }
@@ -191,9 +191,9 @@ class Leason {
     }
   }
 
-  setDefault (schema, key) {
+  setDefault (schema, path) {
     if (this.options.addDefault) {
-      const classifier = this.classifiers.get(key)
+      const classifier = this.classifiers.get(path)
       schema['default'] = classifier.determineDefault()
     }
   }
@@ -239,9 +239,9 @@ class Leason {
     this.parseSchemaPart(obj, this.schema)
   }
 
-  initClassifierForKey (key) {
-    if (!this.classifiers.has(key)) {
-      this.classifiers.set(key, new Classifier())
+  initClassifierForPath (path) {
+    if (!this.classifiers.has(path)) {
+      this.classifiers.set(path, new Classifier())
     }
   }
 
@@ -261,7 +261,7 @@ class Leason {
     }
 
     const path = this.getAbsolutePath(position)
-    this.initClassifierForKey(path)
+    this.initClassifierForPath(path)
 
     schemaPart.type = typeOf(obj)
 
