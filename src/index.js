@@ -170,7 +170,7 @@ class Leason {
   setFormat (schema, path) {
     if (schema.type === 'string' && this.options.captureFormat.minCount > 0) {
       const classifier = this.classifiers.get(path)
-      const _format = classifiers.determineFormat(
+      const _format = classifier.determineFormat(
         this.options.captureFormat.minCount
       )
       if (_format) {
@@ -198,18 +198,18 @@ class Leason {
     }
   }
 
-  scanPrimitive (path, obj, schema, key) {
+  scanPrimitive (obj, schemaPart, key, path) {
     const classifier = this.classifiers.get(path)
 
     classifier.addValue(obj)
 
-    this.setTitle(schema, key)
+    this.setTitle(schemaPart, key)
 
     // Note this is constantly being revaluated
-    this.setDefault(schema, path)
-    this.setPrimitiveType(schema, path)
-    this.setEnum(schema, path)
-    this.setFormat(schema, path)
+    this.setDefault(schemaPart, path)
+    this.setPrimitiveType(schemaPart, path)
+    this.setEnum(schemaPart, path)
+    this.setFormat(schemaPart, path)
   }
 
   /**
@@ -270,7 +270,7 @@ class Leason {
     } else if (schemaPart.type === 'array') {
       this.scanArray(obj, schemaPart, position)
     } else {
-      this.scanPrimitive(path, obj, schemaPart, key)
+      this.scanPrimitive(obj, schemaPart, key, path)
     }
   }
 }
