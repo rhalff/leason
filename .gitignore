@@ -1,7 +1,9 @@
+ATTIC
 *.swp
 *.txt
 *.log
 .idea
+doc
 node_modules/
 .c9/
 lib/
