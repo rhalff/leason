@@ -20,6 +20,9 @@ function parse (str) {
       maxVariant: 10
     })
   }
+  if (program.similar) {
+    leason.setOption('mergeSimilar', program.similar)
+  }
   if (program.format) {
     leason.setOption('captureFormat', {minCount: 1})
   }
@@ -34,6 +37,7 @@ program
   .option('-t, --title', 'add titles')
   .option('-f, --format', 'try to detect format')
   .option('-e, --enum', 'try to detect enum')
+  .option('-s, --similar <n>', 'merge similar objects if `n` or more properties are the same')
   .option('-d, --default', 'add defaults')
   .on('--help', () => {
     console.log('  Examples:')
