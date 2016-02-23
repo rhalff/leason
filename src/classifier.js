@@ -8,8 +8,8 @@ export default class Classifier {
   constructor () {
     this.values = []
   }
- 
-  addValue(obj) {
+
+  addValue (obj) {
     this.values.push(obj)
   }
 

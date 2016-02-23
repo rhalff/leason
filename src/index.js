@@ -1,14 +1,21 @@
 'use strict'
 import typeOf from 'type-of'
 import Schema from './schema'
+import SchemaMerger from './schemaMerger'
 import Classifier from './classifier'
-import {omitter} from './util'
 
 /**
  *
  * Leason
  *
  * @param {Object} options
+ * @param {boolean} options.addTitle whether to add a title
+ * @param {boolean} options.addDefault whether to add a default
+ * @param {object} options.captureEnum whether to captureEnum
+ * @param {number} options.captureEnum.minCount minimum count to determine enum
+ * @param {number} options.captureEnum.maxVariant maximum variation to consider it an enum
+ * @param {boolean} options.captureFormat whether to try and detect the format
+ * @param {number} options.mergeSimilar merges similair objects if `number` of properties are the same.
  */
 class Leason {
   constructor (options = {}) {
@@ -21,6 +28,7 @@ class Leason {
       addDefault: options.addDefault || false,
       captureEnum: options.captureEnum || {},
       captureFormat: options.captureFormat || {},
+      mergeSimilar: options.mergeSimilar || null,
       setTitle: function (str) {
         return str.charAt(0).toUpperCase() + str.slice(1)
       }
@@ -114,6 +122,14 @@ class Leason {
     }
   }
 
+  mergeSame (schema) {
+    SchemaMerger.mergeSameItems(schema)
+  }
+
+  mergeSimilar (schema) {
+    SchemaMerger.mergeSimilarItems(schema, this.options.mergeSimilar)
+  }
+
   /**
    *
    * Reduces the set of items into unique definitions.
@@ -121,21 +137,10 @@ class Leason {
    * @param {Array} items
    */
   postProcessArray (schema) {
-    let i
-    const known = []
-    const remove = []
-    for (i = 0; i < schema.items.length; i++) {
-      // Stringify trick, will fail if key order is different.
-      var res = JSON.stringify(schema.items[i], omitter)
-      if (known.indexOf(res) === -1) {
-        known.push(res)
-      } else {
-        remove.push(res)
-      }
-    }
-
-    for (i = 0; i < remove.length; i++) {
-      schema.items.splice(remove[i], 1)
+    if (typeof this.options.mergeSimilar === 'number') {
+      this.mergeSimilar(schema)
+    } else {
+      this.mergeSame(schema)
     }
 
     // if there is only one type, specify with object

@@ -39,6 +39,10 @@ export function mode (array) {
   return maxEl
 }
 
+export function objectValues (obj) {
+  return Object.keys(obj).map((k) => obj[k])
+}
+
 /**
  *
  * Used to omit `enum` during comparison

@@ -1,0 +1,49 @@
+#
+# Array containing an object
+# This only takes similar objects into account
+#
+#  items: {
+#    type: "object"
+#    properties: {
+#      "name": { "type": "string" },
+#      "age": { "type": "number" },
+#      "married": { "type": "boolean" }
+#    }
+#  }
+#
+---
+options:
+  mergeSimilar: 1
+data:
+  people:
+    -
+      name: John
+      age: 40
+      married: false
+    -
+      name: Mary
+      age: 40
+      married: true
+    -
+      name: Pluto
+      legs: 4
+      eyes: 2
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    people:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+          age:
+            type: "number"
+          married:
+            type: "boolean"
+          legs:
+            type: "number"
+          eyes:
+            type: "number"

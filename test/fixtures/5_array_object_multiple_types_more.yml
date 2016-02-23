@@ -1,0 +1,66 @@
+#
+# Groups definitions on similarity
+#
+---
+options:
+  mergeSimilar: 2
+data:
+  people:
+    -
+      name: John
+      age: 40
+      married: false
+    -
+      name: Mary
+      age: 40
+      married: true
+    -
+      name: Pluto
+      legs: 4
+      eyes: 2
+    -
+      name: Mickey
+      legs: 2
+      eyes: 2
+    -
+      name: Ferari
+      wheels: 4
+      type: car
+    -
+      name: Bianchi
+      wheels: 2
+      type: roadbike
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    people:
+      type: "array"
+      items:
+        -
+          type: "object"
+          properties:
+            name:
+              type: "string"
+            age:
+              type: "number"
+            married:
+              type: "boolean"
+        -
+          type: "object"
+          properties:
+            name:
+              type: "string"
+            legs:
+              type: "number"
+            eyes:
+              type: "number"
+        -
+          type: "object"
+          properties:
+            name:
+              type: "string"
+            wheels:
+              type: "number"
+            type:
+              type: "string"
