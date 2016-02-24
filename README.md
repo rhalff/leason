@@ -24,10 +24,14 @@ $ bin/leason
 
   Options:
 
-    -h, --help     output usage information
-    -V, --version  output the version number
-    -t, --title    add titles
-    -d, --default  add defaults
+    -h, --help         output usage information
+    -V, --version      output the version number
+    -t, --title        add titles
+    -f, --format       try to detect format
+    -e, --enum         try to detect enum
+    -s, --similar <n>  merge similar objects if `n` or more properties are the same
+    -d, --default      add defaults
+    -r, --required     add required
 
   Examples:
 
