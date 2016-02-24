@@ -23,9 +23,15 @@ class Leason {
 
     this.classifiers = new Map()
 
+    this.schemaMap = new Map()
+    this.totalCount = 0
+
+    this.stats = new Map()
+
     this.options = {
       addTitle: options.addTitle || false,
       addDefault: options.addDefault || false,
+      addRequired: options.addRequired || false,
       captureEnum: options.captureEnum || {},
       captureFormat: options.captureFormat || {},
       mergeSimilar: options.mergeSimilar || null,
@@ -90,10 +96,14 @@ class Leason {
    */
   scanObject (obj, schema, position) {
     if (Object.keys(obj).length) {
-      schema.properties = {}
+      if (!schema.hasOwnProperty('properties')) {
+        schema.properties = {}
+      }
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
-          schema.properties[key] = {}
+          if (!schema.properties.hasOwnProperty(key)) {
+            schema.properties[key] = {}
+          }
           this.parseSchemaPart(obj[key], schema.properties[key], key, position.slice())
         }
       }
@@ -123,10 +133,14 @@ class Leason {
   }
 
   mergeSame (schema) {
+    SchemaMerger.mergeSame(schema)
+  }
+  
+  mergeSameItems (schema) {
     SchemaMerger.mergeSameItems(schema)
   }
 
-  mergeSimilar (schema) {
+  mergeSimilarItems (schema) {
     SchemaMerger.mergeSimilarItems(schema, this.options.mergeSimilar)
   }
 
@@ -138,9 +152,9 @@ class Leason {
    */
   postProcessArray (schema) {
     if (typeof this.options.mergeSimilar === 'number') {
-      this.mergeSimilar(schema)
+      this.mergeSimilarItems(schema)
     } else {
-      this.mergeSame(schema)
+      this.mergeSameItems(schema)
     }
 
     // if there is only one type, specify with object
@@ -194,7 +208,43 @@ class Leason {
     }
   }
 
-  scanPrimitive (obj, schemaPart, key, path) {
+  updateStats (path) {
+    if (!this.stats.has(path)) {
+      this.stats.set(path, {count: 0})
+    }
+    this.stats.get(path).count++
+  }
+
+  setRequired (schema, path, position) {
+    if (this.options.addRequired) {
+      const _path = path
+      const classifier = this.classifiers.get(path)
+      const _position = position.slice()
+      const count = this.totalCount
+      const name = _position.pop()
+      const parent = this.schemaMap.get(this.getAbsolutePath(_position))
+      if (classifier.isRequired(count)) {
+        if (!parent.required) {
+          parent.required = []
+        }
+        if (parent.required.indexOf(name) === -1) {
+          parent.required.push(name)
+        }
+      } else {
+        if (parent.required) {
+          const idx = parent.required.indexOf(name)
+          if (idx >= 0) {
+            parent.required.splice(idx, 1)
+            if (parent.required.length === 0) {
+              delete parent.required
+            }
+          }
+        }
+      }
+    }
+  }
+
+  scanPrimitive (obj, schemaPart, key, path, position) {
     const classifier = this.classifiers.get(path)
 
     classifier.addValue(obj)
@@ -203,6 +253,7 @@ class Leason {
 
     // Note this is constantly being revaluated
     this.setDefault(schemaPart, path)
+    this.setRequired(schemaPart, path, position)
     this.setPrimitiveType(schemaPart, path)
     this.setEnum(schemaPart, path)
     this.setFormat(schemaPart, path)
@@ -232,6 +283,7 @@ class Leason {
   }
 
   parse (obj) {
+    this.totalCount++
     this.parseSchemaPart(obj, this.schema)
   }
 
@@ -239,6 +291,10 @@ class Leason {
     if (!this.classifiers.has(path)) {
       this.classifiers.set(path, new Classifier())
     }
+  }
+
+  setSchemaPath (path, schemaPart) {
+    this.schemaMap.set(path, schemaPart)
   }
 
   /**
@@ -257,7 +313,10 @@ class Leason {
     }
 
     const path = this.getAbsolutePath(position)
+
     this.initClassifierForPath(path)
+    this.updateStats(path)
+    this.setSchemaPath(path, schemaPart)
 
     schemaPart.type = typeOf(obj)
 
@@ -266,7 +325,7 @@ class Leason {
     } else if (schemaPart.type === 'array') {
       this.scanArray(obj, schemaPart, position)
     } else {
-      this.scanPrimitive(obj, schemaPart, key, path)
+      this.scanPrimitive(obj, schemaPart, key, path, position)
     }
   }
 }

@@ -1,0 +1,26 @@
+#
+# Groups definitions on similarity
+#
+---
+data:
+  -
+    color: "red"
+    value: "#f00"
+  -
+    color: "blue"
+    value: "#00f"
+    opacity: 0.8
+  -
+    color: "green"
+    value: "#0f0"
+
+schema:
+  '$schema': 'http://json-schema.org/draft-04/schema#'
+  type: "object"
+  properties:
+    color:
+      type: "string"
+    value:
+      type: "string"
+    opacity:
+      type: "number"
