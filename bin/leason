@@ -14,6 +14,7 @@ function parse (str) {
   const leason = new Leason()
   leason.setOption('addTitle', program.title)
   leason.setOption('addDefault', program.default)
+  leason.setOption('addRequired', program.required)
   if (program.enum) {
     leason.setOption('captureEnum', {
       minCount: 1,
@@ -26,7 +27,7 @@ function parse (str) {
   if (program.format) {
     leason.setOption('captureFormat', {minCount: 1})
   }
-
+  
   leason.parse(json)
 
   console.log(JSON.stringify(leason.schema, null, 2))
@@ -39,6 +40,7 @@ program
   .option('-e, --enum', 'try to detect enum')
   .option('-s, --similar <n>', 'merge similar objects if `n` or more properties are the same')
   .option('-d, --default', 'add defaults')
+  .option('-r, --required', 'add required')
   .on('--help', () => {
     console.log('  Examples:')
     console.log('')
