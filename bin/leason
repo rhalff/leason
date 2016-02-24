@@ -27,7 +27,7 @@ function parse (str) {
   if (program.format) {
     leason.setOption('captureFormat', {minCount: 1})
   }
-  
+
   leason.parse(json)
 
   console.log(JSON.stringify(leason.schema, null, 2))
@@ -50,7 +50,6 @@ program
   })
   .parse(process.argv)
 
-// todo: stream when no file, json pipe
 if (program.args.length === 0) {
   stdin(parse)
 } else {
