@@ -68,4 +68,8 @@ export default class Classifier {
   determineDefault () {
     return mode(this.values)
   }
+
+  isRequired(count) {
+    return this.values.length === count
+  }
 }
