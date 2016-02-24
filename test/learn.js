@@ -22,7 +22,13 @@ describe('Leason test', () => {
           leason.setOptions(fixture.options)
         }
 
-        leason.parse(fixture.data)
+        if (Array.isArray(fixture.data)) {
+          fixture.data.forEach((_data) => {
+            leason.parse(_data)
+          }) 
+        } else {
+          leason.parse(fixture.data)
+        }
 
         if(debug) {
           console.log(
