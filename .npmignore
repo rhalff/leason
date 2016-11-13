@@ -1,0 +1,10 @@
+ATTIC/
+src/
+test/
+config/
+.babelrc
+.editorconfig
+.travis.yml
+.gitignore
+node_modules/
+doc/
