@@ -8,3 +8,4 @@ config/
 .gitignore
 node_modules/
 doc/
+.idea/
